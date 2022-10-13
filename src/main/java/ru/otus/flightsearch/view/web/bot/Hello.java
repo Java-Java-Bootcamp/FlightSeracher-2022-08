@@ -1,4 +1,4 @@
-package ru.otus.flightsearch;
+package ru.otus.flightsearch.view.web.bot;
 
 public class Hello {
     public static void main(String[] args) {
