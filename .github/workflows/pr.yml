@@ -24,6 +24,9 @@ jobs:
           cache: maven
       - name: Run tests for searcher
         run: mvn -B test --file searcher/pom.xml
+        env:
+          TOKEN: ${secrets.TOKEN}
+          TRAVEL_PAYOUT_URL: api.travelpayout.com
       - name: Run tests for telegram-bot
         run: mvn -B test --file telegram-bot/pom.xml
       - name: Build with Maven
