@@ -40,6 +40,7 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
     private static final String SHOW_TICKETS = "покажи билеты";
     private static final String SHOW_AIRPORTS = "покажи аэропорты";
     private static final String SHOW_CITIES = "покажи города";
+    private static final String SAVE_TICKET = "сохрани билет";
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -60,6 +61,8 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
                 processCountryRequest(update);
             } else if (inputMessage.equals(SHOW_AIRPORTS)) {
                 processAirportRequest(update);
+            } else if (inputMessage.startsWith(SAVE_TICKET)) {
+                saveTicket(update);
             }
 
         }
@@ -127,6 +130,29 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
 
             log.info(stringBuilder.toString());
             sendMessage(chatId, stringBuilder.toString());
+        }
+    }
+
+    private void saveTicket(Update update) {
+
+        String ticketText;
+
+        String messageTextWithOutPrefix = update.getMessage().getText().replace(SAVE_TICKET, "");
+
+        long chatId = update.getMessage().getChatId();
+
+        if(messageTextWithOutPrefix.isEmpty()) {
+            sendMessage(chatId,
+                    "cannot be empty"); //exception ?
+        } else {
+            try {
+                botBuyerService.saveBuyerChosenTicket(messageTextWithOutPrefix);
+                sendMessage(chatId,
+                        objectMapper.
+                                writeValueAsString("dtoTicketList")); //not clear here ? like: ticket is saved
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -19,12 +19,11 @@ public class BuyerController {
         buyerService.saveUserInfo(buyerRecord);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/ticket-info-save")
     @ResponseBody
-    public Ticket getProduct(@RequestParam String product) /*throws JsonMappingException, JsonProcessingException */{
-        /*Product prod = objectMapper.readValue(product, Product.class);
+    public void saveTicketData(@RequestParam Ticket ticket) /*throws JsonMappingException, JsonProcessingException */{
+        /*Ticket ticket = objectMapper.readValue(ticket, Ticket.class);
         return prod;*/
-        return null;
     }
 }
 
