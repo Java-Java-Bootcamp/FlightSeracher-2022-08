@@ -15,6 +15,7 @@ public class BotServiceProperties {
     private String ticketsPath;
     private String buyerDataHost;
     private String buyerDataPath;
+    private String savedInfo;
 }
 
 
