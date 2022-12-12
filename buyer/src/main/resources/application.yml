@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:/data/buyer
+    url: jdbc:h2:file:./buyer-a
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -8,6 +8,9 @@ spring:
     console.enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-
+    defer-datasource-initialization: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
 
 
