@@ -21,9 +21,10 @@ public class BuyerController {
     }
 
     @PostMapping("/ticket-info-save")
-    public void saveTicketData(@RequestParam TicketRecord ticketRecord) {
+    public void saveTicketData(@RequestBody TicketRecord ticketRecord) {
 
         buyerService.saveTicketData(ticketRecord);
+        //return buyerService.saveTicketData(ticketRecord);
     }
 }
 

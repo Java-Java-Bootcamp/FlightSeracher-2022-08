@@ -11,4 +11,4 @@ botservice:
   cities-path:
   buyer-data-host: "localhost:8080"
   buyer-data-path: "/api/buyers"
-  saved-info: "/buyer-info-save"
+  saved-info-path: "/buyer-info-save"

@@ -37,7 +37,7 @@ public class BotBuyerService {
         BuyerRecord sendBuyerRecord = restTemplate.postForObject
                 (
                         builder.setPath(
-                                botServiceProperties.getBuyerDataPath() + botServiceProperties.getSavedInfo()).toString()
+                                botServiceProperties.getBuyerDataPath() + botServiceProperties.getSavedInfoPath()).toString()
                         , buyerRecord
                         , BuyerRecord.class
                 );
@@ -47,37 +47,21 @@ public class BotBuyerService {
     }
 
     public void saveBuyerChosenTicket(String sendTicketRecord) {
-        //ticketEditor.setAsText(ticketModel);
-
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             TicketRecord ticketRecord = objectMapper.readValue(sendTicketRecord, TicketRecord.class);
-            restTemplate.postForObject
+            TicketRecord savedTicketRecord = restTemplate.postForObject
                     (
                             builder.setPath(
                                     botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString()
                             , ticketRecord
                             , TicketRecord.class
                     );
+            if (savedTicketRecord != null) {
+                log.info("posted info: {}", savedTicketRecord.departCity());
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-/*
-        ObjectMapper objectMapper = new ObjectMapper.re(sendTicketRecord, TicketRecord.class);
-*/
-
-       /* restTemplate.postForObject(builder.setPath(
-                botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString(),
-                sendTicketRecord,
-                String.class
-                );*/
-        /*restTemplate.getForObject(builder.setPath(
-                botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString(),
-                String.class);*/
-/*        restTemplate.getForEntity(
-                builder.setPath(
-                        botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString()
-                , AirportDto[].class).getBody();*/
     }
 }
