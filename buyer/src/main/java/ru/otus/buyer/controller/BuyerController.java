@@ -1,6 +1,7 @@
 package ru.otus.buyer.controller;
 
 import dto.BuyerRecord;
+import dto.TicketRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.buyer.model.Ticket;
@@ -19,11 +20,10 @@ public class BuyerController {
         buyerService.saveUserInfo(buyerRecord);
     }
 
-    @GetMapping("/ticket-info-save")
-    @ResponseBody
-    public void saveTicketData(@RequestParam Ticket ticket) /*throws JsonMappingException, JsonProcessingException */{
-        /*Ticket ticket = objectMapper.readValue(ticket, Ticket.class);
-        return prod;*/
+    @PostMapping("/ticket-info-save")
+    public void saveTicketData(@RequestParam TicketRecord ticketRecord) {
+
+        buyerService.saveTicketData(ticketRecord);
     }
 }
 

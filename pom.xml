@@ -30,6 +30,7 @@
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <spring.boot.starter.test.version>2.7.2</spring.boot.starter.test.version>
         <mockito.core.version>2.21.0</mockito.core.version>
+        <jackson.core.version>2.14.1</jackson.core.version>
     </properties>
 
     <modules>
@@ -116,6 +117,12 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.core.version}</version>
             </dependency>
 
         </dependencies>

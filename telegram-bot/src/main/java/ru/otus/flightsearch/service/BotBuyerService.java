@@ -1,16 +1,15 @@
 package ru.otus.flightsearch.service;
 
-import dto.AirportDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.BuyerRecord;
 import dto.TicketRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.otus.flightsearch.configuration.BotServiceProperties;
-import ru.otus.flightsearch.model.TicketModel;
 
 @Service
 @Slf4j
@@ -19,17 +18,19 @@ public class BotBuyerService {
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
     private final BotServiceProperties botServiceProperties;
+/*
     private final TicketEditor ticketEditor;
+*/
 
     @Autowired
-    public BotBuyerService(RestTemplate restTemplate, BotServiceProperties botServiceProperties, TicketEditor ticketEditor) {
+    public BotBuyerService(RestTemplate restTemplate, BotServiceProperties botServiceProperties/*, TicketEditor ticketEditor*/) {
         this.botServiceProperties = botServiceProperties;
         this.restTemplate = restTemplate;
         this.builder = new URIBuilder()
                 .setScheme("http")
                 .setHost(botServiceProperties.getBuyerDataHost())
         ;
-        this.ticketEditor = ticketEditor;
+        /*this.ticketEditor = ticketEditor;*/
     }
 
     public void postBuyerInfo(BuyerRecord buyerRecord) {
@@ -48,11 +49,29 @@ public class BotBuyerService {
     public void saveBuyerChosenTicket(String sendTicketRecord) {
         //ticketEditor.setAsText(ticketModel);
 
-        restTemplate.postForObject(builder.setPath(
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            TicketRecord ticketRecord = objectMapper.readValue(sendTicketRecord, TicketRecord.class);
+            restTemplate.postForObject
+                    (
+                            builder.setPath(
+                                    botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString()
+                            , ticketRecord
+                            , TicketRecord.class
+                    );
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+/*
+        ObjectMapper objectMapper = new ObjectMapper.re(sendTicketRecord, TicketRecord.class);
+*/
+
+       /* restTemplate.postForObject(builder.setPath(
                 botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString(),
                 sendTicketRecord,
                 String.class
-                );
+                );*/
         /*restTemplate.getForObject(builder.setPath(
                 botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString(),
                 String.class);*/

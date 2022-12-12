@@ -137,19 +137,19 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
 
         String ticketText;
 
-        String messageTextWithOutPrefix = update.getMessage().getText().replace(SAVE_TICKET, "");
+        String messageTextWithOutPrefix = update.getMessage().getText().replace(SAVE_TICKET, "").trim();
 
         long chatId = update.getMessage().getChatId();
 
         if(messageTextWithOutPrefix.isEmpty()) {
             sendMessage(chatId,
-                    "cannot be empty"); //exception ?
+                    "cannot be empty");
         } else {
             try {
                 botBuyerService.saveBuyerChosenTicket(messageTextWithOutPrefix);
                 sendMessage(chatId,
                         objectMapper.
-                                writeValueAsString("dtoTicketList")); //not clear here ? like: ticket is saved
+                                writeValueAsString("You successfully saved the ticket: " + messageTextWithOutPrefix));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
