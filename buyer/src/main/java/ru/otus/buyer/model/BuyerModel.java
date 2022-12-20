@@ -14,19 +14,16 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class Buyer {
+public class BuyerModel {
 
     @Id
     private Long id;
 
     private String firstName;
-
     private boolean isBot;
-
     private String lastName;
-
     private String userName;
 
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
-    private List<Ticket> tickets;
+    @OneToMany(mappedBy = "buyerModel", fetch = FetchType.LAZY)
+    private List<TicketModel> ticketModels;
 }

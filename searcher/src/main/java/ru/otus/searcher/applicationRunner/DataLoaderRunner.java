@@ -1,6 +1,6 @@
 package ru.otus.searcher.applicationRunner;
 
-public interface DataLoader {
+public interface DataLoaderRunner {
 
     void load();
 }

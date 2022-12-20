@@ -12,13 +12,13 @@ import ru.otus.flightsearch.configuration.BotServiceProperties;
 
 @Service
 @Slf4j
-public class BotServiceTravelPayout {
+public class BotTravelPayoutService {
 
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
 
     @Autowired
-    public BotServiceTravelPayout(RestTemplateBuilder restTemplateBuilder, BotServiceProperties botServiceProperties) {
+    public BotTravelPayoutService(RestTemplateBuilder restTemplateBuilder, BotServiceProperties botServiceProperties) {
         this.restTemplate = restTemplateBuilder
                 .errorHandler(new TicketErrorHandler())
                 .build();

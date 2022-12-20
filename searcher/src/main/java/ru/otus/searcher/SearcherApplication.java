@@ -10,7 +10,6 @@ import ru.otus.searcher.configuration.TravelPayoutProperties;
 public class SearcherApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(SearcherApplication.class, args);
     }
 }

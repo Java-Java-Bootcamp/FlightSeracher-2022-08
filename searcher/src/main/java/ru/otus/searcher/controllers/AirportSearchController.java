@@ -13,11 +13,11 @@ import java.util.List;
 @RequestMapping("api/airports")
 @RequiredArgsConstructor
 public class AirportSearchController {
+
     private final AirportsSearchService airportsSearchService;
 
     @GetMapping
     public List<AirportDto> getAirports() {
-
         return airportsSearchService.getAirports();
     }
 }

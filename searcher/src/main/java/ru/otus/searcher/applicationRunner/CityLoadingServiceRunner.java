@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CityLoadingService implements DataLoader {
+public class CityLoadingServiceRunner implements DataLoaderRunner {
 
     private final CitiesSearchService citiesSearchService;
     private final CityRepository cityRepository;

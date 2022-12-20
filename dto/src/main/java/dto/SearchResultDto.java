@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 public class SearchResultDto {
+
     private String departCity;
     private String arriveCity;
     private String site;

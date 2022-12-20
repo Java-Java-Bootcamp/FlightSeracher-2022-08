@@ -6,11 +6,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TicketSearchResult {
+public class TicketSearchResultModel {
+
     private boolean success;
 
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private List<Ticket> data;
-
-
+    private List<TicketModel> data;
 }

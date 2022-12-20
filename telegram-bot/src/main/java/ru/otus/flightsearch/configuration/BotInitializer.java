@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.otus.flightsearch.component.FlightSearcherBot;
+import ru.otus.flightsearch.component.FlightSearcherBotComponent;
 
 @Slf4j
 @Component
 public class BotInitializer {
-    private final FlightSearcherBot bot;
 
-    public BotInitializer(FlightSearcherBot bot) {
+    private final FlightSearcherBotComponent bot;
+
+    public BotInitializer(FlightSearcherBotComponent bot) {
         this.bot = bot;
     }
 

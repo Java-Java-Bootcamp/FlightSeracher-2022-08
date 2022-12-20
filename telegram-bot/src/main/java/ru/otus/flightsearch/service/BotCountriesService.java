@@ -10,13 +10,13 @@ import ru.otus.flightsearch.configuration.BotServiceProperties;
 
 @Service
 @Slf4j
-public class BotServiceCountries {
+public class BotCountriesService {
 
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
 
     @Autowired
-    public BotServiceCountries(RestTemplate restTemplate, BotServiceProperties botServiceProperties) {
+    public BotCountriesService(RestTemplate restTemplate, BotServiceProperties botServiceProperties) {
 
         this.restTemplate = restTemplate;
         this.builder = new URIBuilder()
@@ -27,7 +27,6 @@ public class BotServiceCountries {
 
     public CountryDto[] obtainCountriesList() {
         log.info(builder.toString());
-        CountryDto[] body = restTemplate.getForEntity(builder.toString(), CountryDto[].class).getBody();
-        return body;
+        return restTemplate.getForEntity(builder.toString(), CountryDto[].class).getBody();
     }
 }

@@ -2,14 +2,16 @@ package ru.otus.flightsearch.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.BuyerRecord;
-import dto.TicketRecord;
+import dto.BuyerRecordDto;
+import dto.TicketRecordDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.otus.flightsearch.configuration.BotServiceProperties;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -18,9 +20,6 @@ public class BotBuyerService {
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
     private final BotServiceProperties botServiceProperties;
-/*
-    private final TicketEditor ticketEditor;
-*/
 
     @Autowired
     public BotBuyerService(RestTemplate restTemplate, BotServiceProperties botServiceProperties/*, TicketEditor ticketEditor*/) {
@@ -30,38 +29,46 @@ public class BotBuyerService {
                 .setScheme("http")
                 .setHost(botServiceProperties.getBuyerDataHost())
         ;
-        /*this.ticketEditor = ticketEditor;*/
     }
 
-    public void postBuyerInfo(BuyerRecord buyerRecord) {
-        BuyerRecord sendBuyerRecord = restTemplate.postForObject
+    public void postBuyerInfo(BuyerRecordDto buyerRecordDto) {
+        BuyerRecordDto sendBuyerRecordDto = restTemplate.postForObject
                 (
                         builder.setPath(
                                 botServiceProperties.getBuyerDataPath() + botServiceProperties.getSavedInfoPath()).toString()
-                        , buyerRecord
-                        , BuyerRecord.class
+                        , buyerRecordDto
+                        , BuyerRecordDto.class
                 );
-        if (sendBuyerRecord != null) {
-            log.info("posted info: {}", sendBuyerRecord.id());
+        if (sendBuyerRecordDto != null) {
+            log.info("posted info: {}", sendBuyerRecordDto.id());
         }
     }
 
     public void saveBuyerChosenTicket(String sendTicketRecord) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            TicketRecord ticketRecord = objectMapper.readValue(sendTicketRecord, TicketRecord.class);
-            TicketRecord savedTicketRecord = restTemplate.postForObject
+            TicketRecordDto ticketRecordDto = objectMapper.readValue(sendTicketRecord, TicketRecordDto.class);
+            TicketRecordDto savedTicketRecordDto = restTemplate.postForObject
                     (
                             builder.setPath(
                                     botServiceProperties.getBuyerDataPath() + "/ticket-info-save").toString()
-                            , ticketRecord
-                            , TicketRecord.class
+                            , ticketRecordDto
+                            , TicketRecordDto.class
                     );
-            if (savedTicketRecord != null) {
-                log.info("posted info: {}", savedTicketRecord.departCity());
+            if (savedTicketRecordDto != null) {
+                log.info("posted info: {}", savedTicketRecordDto.departCity());
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<TicketRecordDto> getBuyerTickets(/*Long buyerId*/) {
+        TicketRecordDto[] body = restTemplate.getForEntity
+                (
+                        builder.setPath(
+                                botServiceProperties.getBuyerDataPath() + "/tickets-info-show").toString()
+                        , TicketRecordDto[].class).getBody();
+        return List.of(body);
     }
 }

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AirportsSearchService {
+
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
 

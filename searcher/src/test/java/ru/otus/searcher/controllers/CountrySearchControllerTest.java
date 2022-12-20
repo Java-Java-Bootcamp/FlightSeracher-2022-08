@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.RestTemplate;
-import ru.otus.searcher.applicationRunner.StaticDataListner;
+import ru.otus.searcher.applicationRunner.StaticDataListenerRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@MockBeans(@MockBean(StaticDataListner.class))
+@MockBeans(@MockBean(StaticDataListenerRunner.class))
 class CountrySearchControllerTest {
 
     private final static String URI = "https://api.travelpayouts.com/aviasales_resources/v3/countries.json";

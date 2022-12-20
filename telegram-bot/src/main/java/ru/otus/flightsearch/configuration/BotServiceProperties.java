@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "botservice")
 public class BotServiceProperties {
+
     private String travelPayoutDataHost;
     private String airportPath;
     private String countriesPath;

@@ -19,7 +19,6 @@ public class CountrySearchController {
 
     @GetMapping
     public List<CountryDto> getCountries() {
-
         return countrySearchService.getCountry();
     }
 }

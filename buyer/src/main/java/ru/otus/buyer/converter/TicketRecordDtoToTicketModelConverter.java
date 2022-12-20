@@ -1,16 +1,16 @@
 package ru.otus.buyer.converter;
 
-import dto.TicketRecord;
+import dto.TicketRecordDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import ru.otus.buyer.model.Ticket;
+import ru.otus.buyer.model.TicketModel;
 
 @Component
-public class TicketRecordToTicketModelConverter implements Converter<TicketRecord, Ticket> {
+public class TicketRecordDtoToTicketModelConverter implements Converter<TicketRecordDto, TicketModel> {
 
     @Override
-    public Ticket convert(TicketRecord ticketRecord) {
-        return new Ticket()
+    public TicketModel convert(TicketRecordDto ticketRecord) {
+        return new TicketModel()
                 .setId(ticketRecord.id())
                 .setDepartCity(ticketRecord.departCity())
                 .setArriveCity(ticketRecord.arriveCity())

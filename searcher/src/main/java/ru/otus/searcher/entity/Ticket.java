@@ -18,11 +18,8 @@ public class Ticket {
     private Integer id;
 
     private Long price;
-
     private Timestamp departDate;
-
     private Integer numberOfChanges;
-
     private Long duration;
 
     @ManyToOne(fetch = FetchType.LAZY)

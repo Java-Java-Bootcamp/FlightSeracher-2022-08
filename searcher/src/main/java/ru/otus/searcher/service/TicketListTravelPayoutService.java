@@ -5,7 +5,6 @@ import dto.SearchResultDtoList;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,22 +12,22 @@ import ru.otus.searcher.configuration.TravelPayoutProperties;
 import ru.otus.searcher.converter.TicketSearchResultToSearchResultDTOConverter;
 import ru.otus.searcher.entity.City;
 import ru.otus.searcher.exception.WrongCityDataException;
-import ru.otus.searcher.model.TicketSearchResult;
+import ru.otus.searcher.model.TicketSearchResultModel;
 import ru.otus.searcher.repository.CityRepository;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TicketListServiceTravelPayout implements TicketListService {
+public class TicketListTravelPayoutService implements TicketListService {
 
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
-    private final Converter<TicketSearchResult, SearchResultDtoList> converter;
+    private final Converter<TicketSearchResultModel, SearchResultDtoList> converter;
     private final CityRepository cityRepository;
 
     @Autowired
-    public TicketListServiceTravelPayout(RestTemplate restTemplate, TravelPayoutProperties travelPayoutProperties, TicketSearchResultToSearchResultDTOConverter converter, CityRepository cityRepository) {
+    public TicketListTravelPayoutService(RestTemplate restTemplate, TravelPayoutProperties travelPayoutProperties, TicketSearchResultToSearchResultDTOConverter converter, CityRepository cityRepository) {
         this.restTemplate = restTemplate;
         this.builder = new URIBuilder()
                 .setScheme("https")
@@ -57,10 +56,10 @@ public class TicketListServiceTravelPayout implements TicketListService {
                 .setParameter("origin", /*"mo3"*/originCity.get().getCode())
                 .setParameter("destination", destinationCity.get().getCode())
                 .toString();
-        ResponseEntity<TicketSearchResult> response = restTemplate
+        ResponseEntity<TicketSearchResultModel> response = restTemplate
                 .getForEntity(
                         builderString,
-                        TicketSearchResult.class
+                        TicketSearchResultModel.class
                 );
 /*
         if (response)) { //check exception from TPO

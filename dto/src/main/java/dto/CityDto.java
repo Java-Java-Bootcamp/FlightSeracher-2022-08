@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class CityDto {
+
     @JsonProperty(value = "country_code")
     private String countryCode;
+
     private String code;
     private String name;
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class CitiesSearchService {
+
     private final RestTemplate restTemplate;
     private final URIBuilder builder;
 

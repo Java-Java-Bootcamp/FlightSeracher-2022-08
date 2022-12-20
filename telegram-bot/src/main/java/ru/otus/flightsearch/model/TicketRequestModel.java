@@ -12,28 +12,17 @@ import java.util.Set;
 
 @Data
 @Slf4j
-public class TicketRequest {
+public class TicketRequestModel {
     public static final String europeanDatePattern = "dd-MM-yyyy";
 
     private final String origin;
     private final String destination;
     private final LocalDate actualDate;
 
-    private static Set<String> citiesSet = new HashSet<>() {{
-        add("уфа");
-        add("санкт-петербург");
-        add("казань");
-        add("москва");
-        add("екатеринбург");
-        add("самара");
-        add("нью-йорк");
-        add("дубай");
-    }};
-
-    public static TicketRequest ofText(String text) throws ParseException {
+    public static TicketRequestModel ofText(String text) throws ParseException {
         final String[] paramsArray = text.split(" ");
 
-        return new TicketRequest(paramsArray[0]
+        return new TicketRequestModel(paramsArray[0]
                 , paramsArray[1]
                 , parseDateAndConvertToLocalDateTime(paramsArray[2]));
     }
@@ -48,6 +37,4 @@ public class TicketRequest {
         }
         return parsedDate;
     }
-
-
 }
