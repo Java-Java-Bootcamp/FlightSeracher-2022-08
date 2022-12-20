@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.otus.flightsearch.configuration.BotConfig;
 import ru.otus.flightsearch.converter.TickerRequestToSearchRequestDtoConverter;
-import ru.otus.flightsearch.exception.WrongCityDataException;
+import ru.otus.flightsearch.exception.WrongTicketDataException;
 import ru.otus.flightsearch.model.TicketRequest;
 import ru.otus.flightsearch.service.*;
 
@@ -151,7 +151,7 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
                         objectMapper.
                                 writeValueAsString("You successfully saved the ticket: " + messageTextWithOutPrefix));
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                log.error("JsonProcessingException", e);
             }
         }
     }
@@ -179,15 +179,11 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
                     objectMapper.
                             writeValueAsString(dtoTicketList));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (WrongCityDataException e) {
-            e.printStackTrace();
+            log.error("JsonProcessingException", e);
+        } catch (WrongTicketDataException e) {
+            log.error("exception with data", e);
             sendMessage(chatId,
                     "Wrong incoming Citydata or date");
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            sendMessage(chatId,
-                    "ololo");
         }
     }
 

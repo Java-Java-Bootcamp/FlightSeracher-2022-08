@@ -28,7 +28,5 @@ public class BuyerService {
 
     public void saveTicketData(TicketRecord ticketRecord) {
         ticketRepository.save(ticketRecordTicketConverter.convert(ticketRecord));
-        //return ticketRepository.save(ticketRecordTicketConverter.convert(ticketRecord));
-        //Ticket сверху
     }
 }

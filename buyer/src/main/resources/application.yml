@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:./buyer-a
+    url: jdbc:h2:file:./buyer-a;OLD_INFORMATION_SCHEMA=TRUE #;FILE_LOCK=NO;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -11,6 +11,6 @@ spring:
     defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 
