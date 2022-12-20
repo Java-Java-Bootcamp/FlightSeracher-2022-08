@@ -3,10 +3,7 @@ package ru.otus.flightsearch.component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import dto.AirportDto;
-import dto.BuyerRecord;
-import dto.CountryDto;
-import dto.SearchResultDtoList;
+import dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,22 +14,26 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.otus.flightsearch.configuration.BotConfig;
 import ru.otus.flightsearch.converter.TickerRequestToSearchRequestDtoConverter;
-import ru.otus.flightsearch.exception.WrongCityDataException;
-import ru.otus.flightsearch.model.TicketRequest;
-import ru.otus.flightsearch.service.*;
+import ru.otus.flightsearch.exception.WrongTicketDataException;
+import ru.otus.flightsearch.model.TicketRequestModel;
+import ru.otus.flightsearch.service.BotAirportsService;
+import ru.otus.flightsearch.service.BotBuyerService;
+import ru.otus.flightsearch.service.BotCountriesService;
+import ru.otus.flightsearch.service.BotTravelPayoutService;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FlightSearcherBot extends TelegramLongPollingBot {
-    private final BotConfig config;
-    private final BotServiceTravelPayout botServiceTravelPayout;
+public class FlightSearcherBotComponent extends TelegramLongPollingBot {
 
-    private final BotServiceCountries botServiceCountries;
-    private final BotServiceAirports botServiceAirports;
+    private final BotConfig config;
+    private final BotTravelPayoutService botTravelPayoutService;
+    private final BotCountriesService botCountriesService;
+    private final BotAirportsService botAirportsService;
     private final BotBuyerService botBuyerService;
     private final ObjectMapper objectMapper;
 
@@ -40,17 +41,18 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
     private static final String SHOW_TICKETS = "покажи билеты";
     private static final String SHOW_AIRPORTS = "покажи аэропорты";
     private static final String SHOW_CITIES = "покажи города";
+    private static final String SAVE_TICKET = "сохрани билет";
+    private static final String SHOW_SAVED_TICKETS = "покажи сохраненные билеты";
 
     @Override
     public void onUpdateReceived(Update update) {
-
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             String inputMessage = message.getText();
 
             if (inputMessage.startsWith(SHOW_TICKETS)) {
                 botBuyerService.postBuyerInfo(
-                        new BuyerRecord(message.getChatId(),
+                        new BuyerRecordDto(message.getChatId(),
                                 message.getFrom().getFirstName(),
                                 message.getFrom().getIsBot(),
                                 message.getFrom().getLastName(),
@@ -60,15 +62,17 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
                 processCountryRequest(update);
             } else if (inputMessage.equals(SHOW_AIRPORTS)) {
                 processAirportRequest(update);
+            } else if (inputMessage.startsWith(SAVE_TICKET)) {
+                saveTicket(update);
+            } else if (inputMessage.startsWith(SHOW_SAVED_TICKETS)) {
+                getSavedTickets(update);
             }
-
         }
     }
 
     private void processAirportRequest(Update update) {
         long chatId = update.getMessage().getChatId();
-        sendAirportList(chatId, Lists.newArrayList(botServiceAirports.getAirports()));
-
+        sendAirportList(chatId, Lists.newArrayList(botAirportsService.getAirports()));
     }
 
     private void sendAirportList(long chatId, List<AirportDto> dtoList) {
@@ -98,14 +102,11 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
     }
 
     private void processCountryRequest(Update update) {
-
         long chatId = update.getMessage().getChatId();
-        sendCountryList(chatId, Lists.newArrayList(botServiceCountries.obtainCountriesList()));
-
+        sendCountryList(chatId, Lists.newArrayList(botCountriesService.obtainCountriesList()));
     }
 
     private void sendCountryList(long chatId, List<CountryDto> countryDtoList) {
-
         List<CountryDto> arrCopy = countryDtoList;
 
         int n = 20;
@@ -130,14 +131,50 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
         }
     }
 
-    private void processTicketRequest(Update update) {
+    private void saveTicket(Update update) {
+        String messageTextWithOutPrefix = update.getMessage().getText().replace(SAVE_TICKET, "").trim();
 
-        TicketRequest ticketRequest = null;
+        long chatId = update.getMessage().getChatId();
+
+        if (messageTextWithOutPrefix.isEmpty()) {
+            sendMessage(chatId,
+                    "cannot be empty");
+        } else {
+            try {
+                botBuyerService.saveBuyerChosenTicket(messageTextWithOutPrefix);
+                sendMessage(chatId,
+                        objectMapper.
+                                writeValueAsString("You successfully saved the ticket: " + messageTextWithOutPrefix));
+            } catch (JsonProcessingException e) {
+                log.error("JsonProcessingException while saving ticket", e);
+            }
+        }
+    }
+
+    private void getSavedTickets(Update update) {
+        long chatId = update.getMessage().getChatId();
+
+        if (update.getMessage().getText().isEmpty()) {
+            sendMessage(chatId,
+                    "cannot be empty");
+        } else {
+            List<TicketRecordDto> orderedTickets = botBuyerService.getBuyerTickets(/*chatId*/);
+            if (orderedTickets.isEmpty()) {
+                sendMessage(chatId, "нет сохраненных билетов");
+            }
+            sendMessage(chatId, orderedTickets.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining("\r\n", "{", "}")));
+        }
+    }
+
+    private void processTicketRequest(Update update) {
+        TicketRequestModel ticketRequestModel = null;
 
         String messageTextWithOutPrefix = update.getMessage().getText().replace(SHOW_TICKETS, "");
 
         try {
-            ticketRequest = TicketRequest.ofText(messageTextWithOutPrefix.trim());
+            ticketRequestModel = TicketRequestModel.ofText(messageTextWithOutPrefix.trim());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -145,28 +182,23 @@ public class FlightSearcherBot extends TelegramLongPollingBot {
         long chatId = update.getMessage().getChatId();
 
         try {
-            SearchResultDtoList dtoTicketList = botServiceTravelPayout
+            SearchResultDtoList dtoTicketList = botTravelPayoutService
                     .getDtoTicketList(
                             TickerRequestToSearchRequestDtoConverter
-                                    .convert(ticketRequest));
+                                    .convert(ticketRequestModel));
             sendMessage(chatId,
                     objectMapper.
                             writeValueAsString(dtoTicketList));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (WrongCityDataException e) {
-            e.printStackTrace();
+            log.error("JsonProcessingException", e);
+        } catch (WrongTicketDataException e) {
+            log.error("exception with data", e);
             sendMessage(chatId,
                     "Wrong incoming Citydata or date");
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            sendMessage(chatId,
-                    "ololo");
         }
     }
 
     private void sendMessage(long chatId, String textToSend) {
-
         SendMessage message = new SendMessage();
 
         message.setChatId(String.valueOf(chatId));

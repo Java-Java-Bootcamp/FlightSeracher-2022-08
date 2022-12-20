@@ -1,21 +1,17 @@
 package ru.otus.flightsearch.service;
 
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
-import ru.otus.flightsearch.exception.WrongCityDataException;
+import ru.otus.flightsearch.exception.WrongTicketDataException;
 
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
-
 @Component
 @Slf4j
-public class MockErrorHandler implements ResponseErrorHandler {
+public class TicketErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
@@ -34,9 +30,9 @@ public class MockErrorHandler implements ResponseErrorHandler {
 
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
-        if (response.getStatusCode() == HttpStatus.FORBIDDEN) {
-            log.debug(HttpStatus.FORBIDDEN + " response. Throwing authentication exception");
-            throw new RuntimeException("Cannot get data due to wrong city name22222222222222222222222");
+        if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            log.debug(HttpStatus.BAD_REQUEST + " response. Throwing authentication exception");
+            throw new WrongTicketDataException("Cannot get data due to wrong city name or date");
         }
     }
 }

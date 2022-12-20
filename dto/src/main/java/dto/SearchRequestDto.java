@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 public class SearchRequestDto {
+
     private String origin;
     private String destination;
 

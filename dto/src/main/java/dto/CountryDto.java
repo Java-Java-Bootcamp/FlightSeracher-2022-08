@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
 public class CountryDto {
+
     private String code;
     private String name;
     private String currency;

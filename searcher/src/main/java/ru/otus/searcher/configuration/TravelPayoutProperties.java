@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "travelpayout")
 public class TravelPayoutProperties {
+
     private String token;
     private String url;
     private String searchPath;

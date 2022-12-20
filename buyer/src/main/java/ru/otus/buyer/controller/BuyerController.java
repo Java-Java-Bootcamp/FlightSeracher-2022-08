@@ -1,23 +1,34 @@
 package ru.otus.buyer.controller;
 
-import dto.BuyerRecord;
+import dto.BuyerRecordDto;
+import dto.TicketRecordDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.otus.buyer.model.TicketModel;
 import ru.otus.buyer.service.BuyerService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("api/buyers/info/save")
 @RequiredArgsConstructor
+@RequestMapping("/api/buyers")
 public class BuyerController {
 
     private final BuyerService buyerService;
 
-    @PostMapping
-    public void saveUserData(@RequestBody BuyerRecord buyerRecord) {
+    @PostMapping("/buyer-info-save")
+    public void saveUserData(@RequestBody BuyerRecordDto buyerRecordDto) {
+        buyerService.saveUserInfo(buyerRecordDto);
+    }
 
-        buyerService.saveUserInfo(buyerRecord);
+    @PostMapping("/ticket-info-save")
+    public void saveTicketData(@RequestBody TicketRecordDto ticketRecordDto) {
+        buyerService.saveTicketData(ticketRecordDto);
+    }
+
+    @GetMapping("/tickets-info-show")
+    public List<TicketRecordDto> getTicketData(/*@RequestParam Long usedId*/) {
+        return buyerService.getTickets(/*usedId*/);
     }
 }
+

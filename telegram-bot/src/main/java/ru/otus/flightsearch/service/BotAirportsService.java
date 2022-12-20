@@ -7,11 +7,12 @@ import org.springframework.web.client.RestTemplate;
 import ru.otus.flightsearch.configuration.BotServiceProperties;
 
 @Service
-public class BotServiceAirports {
+public class BotAirportsService {
+
     private final RestTemplate restTemplate;
     private final URIBuilder uriBuilder;
 
-    public BotServiceAirports(RestTemplate restTemplate, BotServiceProperties botServiceProperties) {
+    public BotAirportsService(RestTemplate restTemplate, BotServiceProperties botServiceProperties) {
         this.restTemplate = restTemplate;
         this.uriBuilder = new URIBuilder()
                 .setScheme("http")

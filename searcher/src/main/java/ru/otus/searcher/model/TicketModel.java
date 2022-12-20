@@ -8,7 +8,8 @@ import java.time.LocalDate;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Ticket {
+public class TicketModel {
+
     private long value;
     private String tripClass;
     private String origin;

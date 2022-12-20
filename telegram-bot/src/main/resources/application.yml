@@ -10,4 +10,5 @@ botservice:
   tickets-path: "/api/tickets"
   cities-path:
   buyer-data-host: "localhost:8080"
-  buyer-data-path: "api/buyers/info/save"
+  buyer-data-path: "/api/buyers"
+  saved-info-path: "/buyer-info-save"

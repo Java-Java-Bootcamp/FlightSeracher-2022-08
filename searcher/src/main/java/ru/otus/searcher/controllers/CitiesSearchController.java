@@ -14,11 +14,11 @@ import java.util.List;
 @RequestMapping("api/cities")
 @RequiredArgsConstructor
 public class CitiesSearchController {
+
     private final CitiesSearchService citiesSearchService;
 
     @GetMapping
     public List<CityDto> getListOfCities() {
-
         return citiesSearchService.getCities();
     }
 }

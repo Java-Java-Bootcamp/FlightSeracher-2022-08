@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "bot")
 @PropertySource("application.yml")
 public class BotConfig {
+
     String name;
     String token;
 }

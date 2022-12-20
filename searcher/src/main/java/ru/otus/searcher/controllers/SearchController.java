@@ -18,11 +18,8 @@ public class SearchController {
 
     @PostMapping
     public SearchResultDtoList search(@RequestBody SearchRequestDto dto) {
-
         return ticketListService.getDtoTicketList(dto);
     }
-
-    //localhost:8082/api/tickets > <
 
     @ExceptionHandler(WrongCityDataException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
